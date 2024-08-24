@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, textarea {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        /* Success Popup Styling */
+        .popup {
+            visibility: hidden;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .popup.show {
+            visibility: visible;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+
+            // Get form values
+            const name = document.getElementById("name").value;
+            const mobile = document.getElementById("mobile").value;
+            const studentClass = document.getElementById("class").value;
+            const section = document.getElementById("section").value;
+            const school = document.getElementById("school").value;
+            const dateTime = new Date().toLocaleString();
+
+            // Create a student object
+            const student = {
+                name,
+                mobile,
+                studentClass,
+                section,
+                school,
+                dateTime
+            };
+
+            // Get existing students from local storage or initialize empty array
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+
+            // Add the new student to the array
+            students.push(student);
+
+            // Save back to local storage
+            localStorage.setItem('students', JSON.stringify(students));
+
+            // Show success popup
+            document.getElementById("successPopup").classList.add("show");
+
+            // Hide the popup after 3 seconds
+            setTimeout(() => {
+                document.getElementById("successPopup").classList.remove("show");
+                document.querySelector('form').reset(); // Reset form fields
+            }, 3000);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Student Details Form</h2>
+        <form onsubmit="submitForm(event)">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="mobile">Mobile Number:</label>
+            <input type="tel" id="mobile" name="mobile" required>
+
+            <label for="class">Class:</label>
+            <input type="text" id="class" name="class" required>
+
+            <label for="section">Section:</label>
+            <input type="text" id="section" name="section" required>
+
+            <label for="school">School Name:</label>
+            <input type="text" id="school" name="school" required>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <div id="successPopup" class="popup">Form Submitted Successfully!</div>
+</body>
+</html>
