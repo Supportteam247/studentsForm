@@ -82,35 +82,35 @@
             const studentClass = document.getElementById("class").value;
             const section = document.getElementById("section").value;
             const school = document.getElementById("school").value;
-            const dateTime = new Date().toLocaleString();
 
-            // Create a student object
-            const student = {
-                name,
-                mobile,
-                studentClass,
-                section,
-                school,
-                dateTime
-            };
+            // Create form data object
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('mobile', mobile);
+            formData.append('class', studentClass);
+            formData.append('section', section);
+            formData.append('school', school);
 
-            // Get existing students from local storage or initialize empty array
-            const students = JSON.parse(localStorage.getItem('students')) || [];
+            // Send form data to Google Apps Script
+            fetch('https://script.google.com/macros/s/AKfycbxtzHh_TNYDOpa5LF3dzy9EmF9oe-z-p0H0iqXsbGel6R_XkD0MeigA-ol6qgjj_xju/exec', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data === "Success") {
+                    // Show success popup
+                    document.getElementById("successPopup").classList.add("show");
 
-            // Add the new student to the array
-            students.push(student);
-
-            // Save back to local storage
-            localStorage.setItem('students', JSON.stringify(students));
-
-            // Show success popup
-            document.getElementById("successPopup").classList.add("show");
-
-            // Hide the popup after 3 seconds
-            setTimeout(() => {
-                document.getElementById("successPopup").classList.remove("show");
-                document.querySelector('form').reset(); // Reset form fields
-            }, 3000);
+                    // Hide the popup after 3 seconds
+                    setTimeout(() => {
+                        document.getElementById("successPopup").classList.remove("show");
+                        document.querySelector('form').reset(); // Reset form fields
+                    }, 3000);
+                } else {
+                    alert("Failed to submit form. Please try again.");
+                }
+            });
         }
     </script>
 </head>
